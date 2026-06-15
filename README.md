@@ -31,7 +31,7 @@
 | Herramienta | Tecnología | Descripción |
 |---|---|---|
 | **Simulador de Antenas** | FastAPI + React | Motor numérico MiniNEC para calcular patrones de radiación 3D, impedancias y SWR. Diseño CAD de geometrías de antena. |
-| **Planificador RF** | Streamlit | Análisis de radioenlaces PTP, mapas de cobertura con elevación real de terreno (SRTM/HGT), balance de enlace y zonas de Fresnel. |
+| **Planificador RF** | Streamlit | Análisis de radioenlaces PTP, mapas de cobertura con elevación real de terreno, balance de enlace y zonas de Fresnel. |
 
 ### Funcionalidades principales
 
@@ -39,7 +39,7 @@
 - 📊 **SWR e Impedancia** — barrido en frecuencia con gráficas de red
 - 🗺️ **Mapas de cobertura RF** — integración con datos de elevación SRTM
 - 📡 **Balance de enlace PTP** — FSPL, Fresnel, EIRP, margen de desvanecimiento
-- 📐 **Editor CAD 3D** — diseño de dipolo, Yagi, parábola, helicoidal y geometría libre
+- 📐 **Editor 3D** — diseño de dipolo, Yagi, parábola, helicoidal y geometría libre
 - 🌍 **Exportación KML** — visualización en Google Earth
 - 🐳 **Despliegue Docker** — entorno reproducible multiplataforma
 
@@ -66,11 +66,6 @@ UPTA-Antenna-Suite/
 │   │   └── components/         # Sidebar, Viewer, modales, visores
 │   ├── package.json
 │   └── tailwind.config.js
-│
-└── docker/                     # Archivos de contenedorización
-    ├── docker-compose.yml
-    ├── Dockerfile.backend
-    └── Dockerfile.streamlit
 ```
 
 **Flujo de datos:**
@@ -96,7 +91,7 @@ Usuario (Browser/Streamlit)
 | Simulador de Antenas | Planificador RF |
 |:---:|:---:|
 | ![Simulador](docs/screenshots/simulator.png) | ![Planificador](docs/screenshots/planner.png) |
-| *Editor CAD + Patrón 3D* | *Mapa de cobertura con RSSI* |
+| *Editor + Patrón 3D* | *Mapa de cobertura con RSSI* |
 
 | Corte Azimuth / Elevación | Balance de Enlace PTP |
 |:---:|:---:|
@@ -115,31 +110,16 @@ La forma más rápida de usar UPTA Antenna Suite sin instalar nada.
 
 ### Pasos
 
-1. **Descarga el ejecutable** desde la página de [Releases](https://github.com/freddy-debug-ve/upta-antenna-suite/releases/latest):
-   - `UPTA_Simulator_v1.0.0_win64.exe` — Simulador de Antenas
-   - `UPTA_Planner_v1.0.0_win64.exe` — Planificador RF
+**Descarga los archivos** desde la página de [Releases](https://github.com/freddy-debug-ve/upta-antenna-suite/releases/latest):
 
-2. **Ejecuta el Simulador de Antenas:**
-   ```
-   Doble clic en UPTA_Simulator_v1.0.0_win64.exe
-   ```
-   Se abre automáticamente el navegador en `http://localhost:8000`
-
-3. **Ejecuta el Planificador RF:**
-   ```
-   Doble clic en UPTA_Planner_v1.0.0_win64.exe
-   ```
-   Se abre automáticamente en `http://localhost:8501`
 
 > ⚠️ **Windows Defender SmartScreen** puede mostrar una advertencia la primera vez. Haz clic en *"Más información" → "Ejecutar de todas formas"*. Los ejecutables están generados con PyInstaller desde el código fuente de este repositorio.
 
 ### Datos de elevación (Planificador RF)
 
-Los datos HGT no están incluidos en el ejecutable por su tamaño. Descárgalos desde:
-- [SRTM Data — USGS EarthExplorer](https://earthexplorer.usgs.gov/)
-- [ViewFinderPanoramas](http://www.viewfinderpanoramas.org/dem3.html)
+Los datos HGT no están incluidos.
 
-Coloca los archivos `.hgt.zip` en la carpeta `hgtdata/` junto al ejecutable.
+Coloca los archivos `.hgt.zip` en la carpeta `hgtdata/`.
 
 ---
 
@@ -239,56 +219,6 @@ Pillow
 
 ---
 
-## 🐳 Instalación — Docker
-
-La opción recomendada para entornos de producción o despliegue en servidor.
-
-### Requisitos previos
-
-- [Docker Desktop](https://www.docker.com/products/docker-desktop/) (Windows/Linux/macOS)
-- Docker Compose v2+
-
-### Inicio rápido
-
-```bash
-git clone https://github.com/freddy-debug-ve/upta-antenna-suite.git
-cd upta-antenna-suite
-
-# Construir y levantar todos los servicios
-docker compose up --build
-```
-
-| Servicio | URL | Descripción |
-|---|---|---|
-| Simulador (Frontend + API) | http://localhost:8000 | React + FastAPI |
-| Planificador RF | http://localhost:8501 | Streamlit |
-
-### Detener los servicios
-
-```bash
-docker compose down
-```
-
-### Estructura Docker
-
-```yaml
-# docker-compose.yml (resumen)
-services:
-  backend:
-    build: ./docker/Dockerfile.backend
-    ports: ["8000:8000"]
-    volumes:
-      - ./backend:/app
-      - ./frontend/dist:/app/dist   # Build del frontend
-
-  streamlit:
-    build: ./docker/Dockerfile.streamlit
-    ports: ["8501:8501"]
-    volumes:
-      - ./streamlit:/app
-      - ./streamlit/hgtdata:/app/hgtdata
-```
-
 ### Variables de entorno
 
 Crea un archivo `.env` en la raíz si necesitas personalizar:
@@ -313,168 +243,6 @@ El backend FastAPI genera documentación interactiva automáticamente.
 Una vez iniciado el backend, accede a:
 - **Swagger UI:** http://localhost:8000/docs
 - **ReDoc:** http://localhost:8000/redoc
-
-### Endpoints principales
-
----
-
-#### `POST /api/simulate`
-
-Ejecuta la simulación numérica completa: geometría → MiniNEC → patrones de radiación.
-
-**Request Body:**
-```json
-{
-  "frequency": {
-    "mode": "single",
-    "value": 144.0,
-    "start": 140.0,
-    "end": 148.0,
-    "steps": 2
-  },
-  "elements": [
-    {
-      "id": "el-001",
-      "type": "dipole",
-      "params": {
-        "p1": "0,0,-0.5",
-        "p2": "0,0,0.5",
-        "radius": "0.001",
-        "x": 0, "y": 0, "z": 0,
-        "theta": 0, "phi": 0, "psi": 0
-      }
-    }
-  ],
-  "sources": [
-    {
-      "id": "src-1",
-      "type": "Voltaje",
-      "wireIndex": 1,
-      "segment": 5,
-      "amplitude": 1.0,
-      "phase": 0
-    }
-  ]
-}
-```
-
-**Response:**
-```json
-{
-  "status": "success",
-  "patterns": [
-    {
-      "frequency": 144.0,
-      "x": [[...]], "y": [[...]], "z": [[...]],
-      "r": [[...]],
-      "max_gain": 2.14,
-      "min_gain": -38.5
-    }
-  ],
-  "networkData": {
-    "1": {
-      "f": [144.0],
-      "r": [73.1],
-      "x": [-0.5],
-      "swr": [1.03]
-    }
-  },
-  "patterns_2d": {
-    "azimuth_sets": [...],
-    "elevation_sets": [...]
-  }
-}
-```
-
----
-
-#### `POST /api/build-geometry`
-
-Valida y construye la geometría sin ejecutar el cálculo de campo lejano. Útil para previsualización rápida.
-
-**Request Body:** Igual que `/api/simulate`
-
-**Response:**
-```json
-{
-  "status": "success",
-  "wires": [
-    {
-      "tag": 1,
-      "segments": 9,
-      "points": [[0,0,-0.5], [...], [0,0,0.5]]
-    }
-  ]
-}
-```
-
----
-
-#### `POST /api/calculate-network`
-
-Calcula únicamente datos de red (impedancia y SWR) en barrido de frecuencia, sin calcular patrones 3D.
-
-**Request Body:** Igual que `/api/simulate`
-
-**Response:**
-```json
-{
-  "status": "success",
-  "networkData": {
-    "1": {
-      "f": [140.0, 142.0, 144.0],
-      "r": [55.2, 68.4, 73.1],
-      "x": [-22.3, -8.1, -0.5],
-      "swr": [1.52, 1.14, 1.03],
-      "Wire": [1, 1, 1]
-    }
-  }
-}
-```
-
----
-
-#### `POST /api/validate-equation`
-
-Valida una expresión matemática simbólica y retorna su representación LaTeX. Usado en el modo de geometría paramétrica libre.
-
-**Request Body:**
-```json
-{
-  "expr": "sin(u)*cos(u^2)/2"
-}
-```
-
-**Response:**
-```json
-{
-  "status": "valid",
-  "latex": "\\frac{\\sin{\\left(u \\right)} \\cos{\\left(u^{2} \\right)}}{2}"
-}
-```
-
----
-
-#### `POST /api/export-nec`
-
-Genera el archivo de texto en formato NEC2 compatible con otros simuladores (4nec2, EZNEC, etc.).
-
-**Request Body:**
-```json
-{
-  "freq": 144.0,
-  "elements": [...],
-  "sources": [...]
-}
-```
-
-**Response:**
-```json
-{
-  "status": "success",
-  "nec_file": "CM UPTA Antenna Suite Export\nCE\nGW 1 9 0 0 -0.5 0 0 0.5 0.001\n..."
-}
-```
 
 ### Tipos de Elementos Soportados
 
@@ -534,11 +302,7 @@ Genera el archivo de texto en formato NEC2 compatible con otros simuladores (4ne
 │   ├── requirements.txt
 │   ├── pyhigh/                     # Elevación SRTM
 │   └── hgtdata/                    # Archivos .hgt (no en repo)
-│
-├── docker/
-│   ├── docker-compose.yml
-│   ├── Dockerfile.backend
-│   └── Dockerfile.streamlit
+
 │
 ├── docs/
 │   └── screenshots/
