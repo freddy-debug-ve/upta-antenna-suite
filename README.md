@@ -16,6 +16,7 @@
 - [Arquitectura del Proyecto](#-arquitectura-del-proyecto)
 - [Capturas de Pantalla](#-capturas-de-pantalla)
 - [Instalación — Ejecutable Windows](#-instalación--ejecutable-windows)
+- [Instalación — Docker](#-instalación--docker)
 - [Instalación — Código Fuente](#-instalación--código-fuente)
 - [Documentación de la API](#-documentación-de-la-api)
 - [Estructura del Repositorio](#-estructura-del-repositorio)
@@ -109,7 +110,15 @@ La forma más rápida de usar UPTA Antenna Suite sin instalar nada.
 
 ### Pasos
 
-**Descarga los archivos** desde la página de [Releases](https://github.com/freddy-debug-ve/upta-antenna-suite/releases/latest):
+**1. Descarga los archivos** desde la página de [Releases](https://github.com/freddy-debug-ve/upta-antenna-suite/releases/latest):
+
+**2. Descomprime el .zip en una ruta o directorio de trabajo**
+
+**3. Abre Start.exe**
+
+**4. Inicia el aplicativo a utilizar (o ambos)**
+
+**5. Accede con el navegador a http://localhost:8000 o http://localhost:8501**
 
 
 > ⚠️ **Windows Defender SmartScreen** puede mostrar una advertencia la primera vez. Haz clic en *"Más información" → "Ejecutar de todas formas"*. Los ejecutables están generados con PyInstaller desde el código fuente de este repositorio.
@@ -217,6 +226,64 @@ Pillow
 ```
 
 ---
+ 
+## 🐳 Instalación — Docker
+ 
+La opción recomendada para entornos de producción o despliegue en servidor. Todos los servicios se orquestan con Docker Compose y se exponen a través de un **gateway Nginx** en un único puerto.
+ 
+### Requisitos previos
+ 
+- [Docker Desktop](https://www.docker.com/products/docker-desktop/) (Windows/Linux/macOS)
+- Docker Compose v2+
+### Inicio rápido
+
+Descarga el archivo UPT_Antenna_Suite_for_Docker.zip desde la página de [Releases](https://github.com/freddy-debug-ve/upta-antenna-suite/releases/latest):
+
+Descomprime en upta-antena-suite
+
+Luego ejecuta:
+ 
+```bash
+cd upta-antena-suite
+ 
+# Construir y levantar todos los servicios
+docker compose up --build
+```
+ 
+Una vez iniciado, abre el navegador en:
+ 
+| Ruta | Descripción |
+|---|---|
+| `http://localhost/` | Simulador de Antenas |
+| `http://localhost/radiolink/` | Planificador RF |
+ 
+> Todo el tráfico entra por el **puerto 80** a través del gateway Nginx, que enruta internamente a cada servicio.
+ 
+### Arquitectura de contenedores
+ 
+```
+                        ┌─────────────────────────────────┐
+Usuario → :80           │        gateway (Nginx)          │
+                        │  nginx:alpine · nginx.conf      │
+                        └──────┬──────────┬───────────────┘
+                               │          │
+              /radiolink/      │          │  /  y  /api/
+                     ┌─────────▼──┐  ┌───▼──────────────────┐
+                     │ radiolink  │  │       ant-one         │
+                     │ Streamlit  │  │  Frontend React (:80) │
+                     │   :8501    │  └───────────────────────┘
+                     └────────────┘            │ /api/
+                                      ┌────────▼────────┐
+                                      │    antenna      │
+                                      │  FastAPI :8000  │
+                                      └─────────────────┘
+```
+ 
+### Detener los servicios
+ 
+```bash
+docker compose down
+```
 
 ### Variables de entorno
 
