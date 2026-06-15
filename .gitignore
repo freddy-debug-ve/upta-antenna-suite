@@ -1,0 +1,72 @@
+# ============================================================
+#  UPTA Antenna Suite — .gitignore
+# ============================================================
+
+# --- Ejecutables y builds de distribución ---
+dist/
+build/
+*.exe
+*.zip
+*.tar.gz
+*.7z
+
+# --- Frontend build ---
+frontend/dist/
+frontend/node_modules/
+frontend/.vite/
+
+# --- Datos HGT ---
+streamlit/hgtdata/*.hgt
+streamlit/hgtdata/*.zip
+streamlit/hgtdata/*.tar.gz
+
+# --- Python ---
+__pycache__/
+*.py[cod]
+*.pyd
+*.pyo
+*.so
+*.egg
+*.egg-info/
+.eggs/
+*.spec
+
+# --- Entornos virtuales ---
+venv/
+.venv/
+env/
+.env/
+
+# --- Variables de entorno ---
+.env
+.env.local
+.env.production
+
+# --- IDEs ---
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# --- OS ---
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# --- Logs ---
+*.log
+logs/
+
+# --- Docker volumes ---
+docker/volumes/
+docker/data/
+
+# --- Streamlit ---
+.streamlit/secrets.toml
+
+# --- Pytest / coverage ---
+.pytest_cache/
+htmlcov/
+.coverage
+coverage.xml
