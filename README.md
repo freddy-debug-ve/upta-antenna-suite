@@ -15,9 +15,9 @@
 - [Descripción General](#-descripción-general)
 - [Arquitectura del Proyecto](#-arquitectura-del-proyecto)
 - [Capturas de Pantalla](#-capturas-de-pantalla)
-- [Instalación �?Ejecutable Windows](#-instalación--ejecutable-windows)
-- [Instalación �?Código Fuente](#-instalación--código-fuente)
-- [Instalación �?Docker](#-instalación--docker)
+- [Instalación — Ejecutable Windows](#-instalación--ejecutable-windows)
+- [Instalación — Código Fuente](#-instalación--código-fuente)
+- [Instalación — Docker](#-instalación--docker)
 - [Documentación de la API](#-documentación-de-la-api)
 - [Estructura del Repositorio](#-estructura-del-repositorio)
 - [Contribuir](#-contribuir)
@@ -35,35 +35,39 @@
 
 ### Funcionalidades principales
 
-- 🧮 **Simulación numérica MiniNEC** �?patrones 3D, ARRL, cortes azimuth/elevación
-- 📊 **SWR e Impedancia** �?barrido en frecuencia con gráficas de red
-- 🗺�?**Mapas de cobertura RF** �?integración con datos de elevación SRTM
-- 📡 **Balance de enlace PTP** �?FSPL, Fresnel, EIRP, margen de desvanecimiento
-- 📐 **Editor CAD 3D** �?diseño de dipolo, Yagi, parábola, helicoidal y geometría libre
-- 🌍 **Exportación KML** �?visualización en Google Earth
-- 🐳 **Despliegue Docker** �?entorno reproducible multiplataforma
+- 🧮 **Simulación numérica MiniNEC** — patrones 3D, ARRL, cortes azimuth/elevación
+- 📊 **SWR e Impedancia** — barrido en frecuencia con gráficas de red
+- 🗺️ **Mapas de cobertura RF** — integración con datos de elevación SRTM
+- 📡 **Balance de enlace PTP** — FSPL, Fresnel, EIRP, margen de desvanecimiento
+- 📐 **Editor CAD 3D** — diseño de dipolo, Yagi, parábola, helicoidal y geometría libre
+- 🌍 **Exportación KML** — visualización en Google Earth
+- 🐳 **Despliegue Docker** — entorno reproducible multiplataforma
 
 ---
 
-## 🏗�?Arquitectura del Proyecto
+## 🏗️ Arquitectura del Proyecto
 
 ```
 UPTA-Antenna-Suite/
-�?├── streamlit/                  # Planificador RF
-�?  ├── app.py                  # Aplicación principal Streamlit
-�?  ├── pyhigh/                 # Módulo de elevación de terreno (SRTM)
-�?  └── hgtdata/                # Datos de elevación HGT (no incluidos en repo)
-�?├── backend/                    # API del Simulador de Antenas
-�?  ├── main.py                 # FastAPI + uvicorn
-�?  ├── submininec/             # Motor numérico MiniNEC (Python)
-�?  └── subplot_antenna/        # Utilidades de visualización de patrones
-�?├── frontend/                   # Interfaz CAD del Simulador
-�?  ├── src/
-�?  �?  ├── App.jsx             # Componente raíz
-�?  �?  └── components/         # Sidebar, Viewer, modales, visores
-�?  ├── package.json
-�?  └── tailwind.config.js
-�?└── docker/                     # Archivos de contenedorización
+│
+├── streamlit/                  # Planificador RF
+│   ├── app.py                  # Aplicación principal Streamlit
+│   ├── pyhigh/                 # Módulo de elevación de terreno (SRTM)
+│   └── hgtdata/                # Datos de elevación HGT (no incluidos en repo)
+│
+├── backend/                    # API del Simulador de Antenas
+│   ├── main.py                 # FastAPI + uvicorn
+│   ├── submininec/             # Motor numérico MiniNEC (Python)
+│   └── subplot_antenna/        # Utilidades de visualización de patrones
+│
+├── frontend/                   # Interfaz CAD del Simulador
+│   ├── src/
+│   │   ├── App.jsx             # Componente raíz
+│   │   └── components/         # Sidebar, Viewer, modales, visores
+│   ├── package.json
+│   └── tailwind.config.js
+│
+└── docker/                     # Archivos de contenedorización
     ├── docker-compose.yml
     ├── Dockerfile.backend
     └── Dockerfile.streamlit
@@ -73,9 +77,13 @@ UPTA-Antenna-Suite/
 
 ```
 Usuario (Browser/Streamlit)
-       �?       �?  Frontend React  ──POST /api/simulate──�? FastAPI Backend
-       �?                                       �?       │◄──────── JSON (patrones, SWR) ─────────�?       �?                                  submininec
-       �?                                 (Motor MiniNEC)
+       │
+       ▼
+  Frontend React  ──POST /api/simulate──►  FastAPI Backend
+       │                                        │
+       │◄──────── JSON (patrones, SWR) ─────────┤
+       │                                   submininec
+       ▼                                  (Motor MiniNEC)
   Viewer 3D / Gráficas Plotly
 ```
 
@@ -97,19 +105,19 @@ Usuario (Browser/Streamlit)
 
 ---
 
-## 🪟 Instalación �?Ejecutable Windows
+## 🪟 Instalación — Ejecutable Windows
 
 La forma más rápida de usar UPTA Antenna Suite sin instalar nada.
 
 ### Requisitos previos
 - Windows 10 / 11 (64-bit)
-- Sin dependencias adicionales �?todo incluido en el ejecutable
+- Sin dependencias adicionales — todo incluido en el ejecutable
 
 ### Pasos
 
 1. **Descarga el ejecutable** desde la página de [Releases](https://github.com/freddy-debug-ve/upta-antenna-suite/releases/latest):
-   - `UPTA_Simulator_v1.0.0_win64.exe` �?Simulador de Antenas
-   - `UPTA_Planner_v1.0.0_win64.exe` �?Planificador RF
+   - `UPTA_Simulator_v1.0.0_win64.exe` — Simulador de Antenas
+   - `UPTA_Planner_v1.0.0_win64.exe` — Planificador RF
 
 2. **Ejecuta el Simulador de Antenas:**
    ```
@@ -123,19 +131,19 @@ La forma más rápida de usar UPTA Antenna Suite sin instalar nada.
    ```
    Se abre automáticamente en `http://localhost:8501`
 
-> ⚠️ **Windows Defender SmartScreen** puede mostrar una advertencia la primera vez. Haz clic en *"Más información" �?"Ejecutar de todas formas"*. Los ejecutables están generados con PyInstaller desde el código fuente de este repositorio.
+> ⚠️ **Windows Defender SmartScreen** puede mostrar una advertencia la primera vez. Haz clic en *"Más información" → "Ejecutar de todas formas"*. Los ejecutables están generados con PyInstaller desde el código fuente de este repositorio.
 
 ### Datos de elevación (Planificador RF)
 
 Los datos HGT no están incluidos en el ejecutable por su tamaño. Descárgalos desde:
-- [SRTM Data �?USGS EarthExplorer](https://earthexplorer.usgs.gov/)
+- [SRTM Data — USGS EarthExplorer](https://earthexplorer.usgs.gov/)
 - [ViewFinderPanoramas](http://www.viewfinderpanoramas.org/dem3.html)
 
 Coloca los archivos `.hgt.zip` en la carpeta `hgtdata/` junto al ejecutable.
 
 ---
 
-## 🐍 Instalación �?Código Fuente
+## 🐍 Instalación — Código Fuente
 
 ### Requisitos previos
 
@@ -150,7 +158,7 @@ git clone https://github.com/freddy-debug-ve/upta-antenna-suite.git
 cd upta-antenna-suite
 ```
 
-### 2. Backend �?Simulador de Antenas
+### 2. Backend — Simulador de Antenas
 
 ```bash
 cd backend
@@ -168,7 +176,7 @@ python main.py
 # API disponible en http://localhost:8000
 ```
 
-### 3. Frontend �?Simulador de Antenas
+### 3. Frontend — Simulador de Antenas
 
 ```bash
 cd frontend
@@ -231,7 +239,7 @@ Pillow
 
 ---
 
-## 🐳 Instalación �?Docker
+## 🐳 Instalación — Docker
 
 La opción recomendada para entornos de producción o despliegue en servidor.
 
@@ -312,7 +320,7 @@ Una vez iniciado el backend, accede a:
 
 #### `POST /api/simulate`
 
-Ejecuta la simulación numérica completa: geometría �?MiniNEC �?patrones de radiación.
+Ejecuta la simulación numérica completa: geometría → MiniNEC → patrones de radiación.
 
 **Request Body:**
 ```json
@@ -483,12 +491,12 @@ Genera el archivo de texto en formato NEC2 compatible con otros simuladores (4ne
 
 | Clave | Material | Conductividad (S/m) |
 |---|---|---|
-| `COPPER` | Cobre | 5.8 × 10�?|
-| `SILVER` | Plata | 6.3 × 10�?|
-| `ALUMINUM` | Aluminio | 3.5 × 10�?|
-| `STEEL` | Acero inoxidable | 1.4 × 10�?|
-| `STEEL_GALVANIZED` | Acero galvanizado | 6.0 × 10�?|
-| `BRASS` | Latón | 1.5 × 10�?|
+| `COPPER` | Cobre | 5.8 × 10⁷ |
+| `SILVER` | Plata | 6.3 × 10⁷ |
+| `ALUMINUM` | Aluminio | 3.5 × 10⁷ |
+| `STEEL` | Acero inoxidable | 1.4 × 10⁶ |
+| `STEEL_GALVANIZED` | Acero galvanizado | 6.0 × 10⁶ |
+| `BRASS` | Latón | 1.5 × 10⁷ |
 
 ---
 
@@ -497,40 +505,45 @@ Genera el archivo de texto en formato NEC2 compatible con otros simuladores (4ne
 ```
 .
 ├── backend/
-�?  ├── main.py                     # Punto de entrada FastAPI
-�?  ├── requirements.txt
-�?  ├── submininec/                 # Motor MiniNEC
-�?  �?  ├── mininec.py
-�?  �?  ├── pulse.py
-�?  �?  ├── segment.py
-�?  �?  └── ...
-�?  └── subplot_antenna/            # Utilidades de plot
-�?├── frontend/
-�?  ├── src/
-�?  �?  ├── App.jsx
-�?  �?  ├── components/
-�?  �?  �?  ├── Sidebar.jsx         # Panel de control
-�?  �?  �?  ├── Viewer.jsx          # Visor principal
-�?  �?  �?  ├── PatternViewer.jsx   # Patrón 3D
-�?  �?  �?  ├── PolarViewer.jsx     # Cortes 2D
-�?  �?  �?  ├── SWRViewer.jsx       # Red / SWR
-�?  �?  �?  ├── OrthogonalEditor.jsx # CAD 2D
-�?  �?  �?  ├── CoordinateTable.jsx  # Tabla de hilos
-�?  �?  �?  └── ...
-�?  ├── package.json
-�?  └── tailwind.config.js
-�?├── streamlit/
-�?  ├── app.py                      # Planificador RF
-�?  ├── requirements.txt
-�?  ├── pyhigh/                     # Elevación SRTM
-�?  └── hgtdata/                    # Archivos .hgt (no en repo)
-�?├── docker/
-�?  ├── docker-compose.yml
-�?  ├── Dockerfile.backend
-�?  └── Dockerfile.streamlit
-�?├── docs/
-�?  └── screenshots/
-�?├── .gitignore
+│   ├── main.py                     # Punto de entrada FastAPI
+│   ├── requirements.txt
+│   ├── submininec/                 # Motor MiniNEC
+│   │   ├── mininec.py
+│   │   ├── pulse.py
+│   │   ├── segment.py
+│   │   └── ...
+│   └── subplot_antenna/            # Utilidades de plot
+│
+├── frontend/
+│   ├── src/
+│   │   ├── App.jsx
+│   │   ├── components/
+│   │   │   ├── Sidebar.jsx         # Panel de control
+│   │   │   ├── Viewer.jsx          # Visor principal
+│   │   │   ├── PatternViewer.jsx   # Patrón 3D
+│   │   │   ├── PolarViewer.jsx     # Cortes 2D
+│   │   │   ├── SWRViewer.jsx       # Red / SWR
+│   │   │   ├── OrthogonalEditor.jsx # CAD 2D
+│   │   │   ├── CoordinateTable.jsx  # Tabla de hilos
+│   │   │   └── ...
+│   ├── package.json
+│   └── tailwind.config.js
+│
+├── streamlit/
+│   ├── app.py                      # Planificador RF
+│   ├── requirements.txt
+│   ├── pyhigh/                     # Elevación SRTM
+│   └── hgtdata/                    # Archivos .hgt (no en repo)
+│
+├── docker/
+│   ├── docker-compose.yml
+│   ├── Dockerfile.backend
+│   └── Dockerfile.streamlit
+│
+├── docs/
+│   └── screenshots/
+│
+├── .gitignore
 └── README.md
 ```
 
@@ -563,6 +576,6 @@ Este proyecto está bajo la licencia MIT. Ver el archivo [LICENSE](LICENSE) para
 ---
 
 <div align="center">
-  <strong>UPTA Antenna Suite</strong> �?Desarrollado en la Universidad Politécnica Territorial de Aragua<br>
+  <strong>UPTA Antenna Suite</strong> — Desarrollado en la Universidad Politécnica Territorial de Aragua<br>
   <sub>Motor numérico basado en MiniNEC · Datos de terreno SRTM/HGT · Exportación NEC2/KML</sub>
 </div>
