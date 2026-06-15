@@ -17,7 +17,6 @@
 - [Capturas de Pantalla](#-capturas-de-pantalla)
 - [Instalación — Ejecutable Windows](#-instalación--ejecutable-windows)
 - [Instalación — Código Fuente](#-instalación--código-fuente)
-- [Instalación — Docker](#-instalación--docker)
 - [Documentación de la API](#-documentación-de-la-api)
 - [Estructura del Repositorio](#-estructura-del-repositorio)
 - [Contribuir](#-contribuir)
